@@ -1,0 +1,7 @@
+V	270126204133Z		01	unknown	/C=FR/O=Telecom-Paris/CN=www.mon-domaine.com
+V	360124225511Z		02	unknown	/C=FR/O=Telecom-Paris/CN=thomas
+R	360124232738Z	260127164754Z	03	unknown	/C=FR/O=Telecom-Paris/CN=alexis
+V	360125234209Z		04	unknown	04
+V	360125235804Z		05	unknown	05
+V	360126000226Z		06	unknown	06
+V	360126003457Z		07	unknown	/C=FR/O=Telecom-Paris/CN=antoine

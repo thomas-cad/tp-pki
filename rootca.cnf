@@ -1,0 +1,43 @@
+[ ca ]
+# Section principale definissant l'entite AC par defaut a utiliser
+default_ca = CA_default
+
+[ CA_default ]
+# --- Chemins et fichiers de base de la PKI ---
+dir               = .
+database          = $dir/index.txt
+serial            = $dir/serial
+new_certs_dir     = $dir/newcerts
+certs             = $dir/certs
+private_key       = $dir/private/rootca.key
+certificate       = $dir/certs/rootca.crt
+
+# --- Parametres par defaut pour la signature ---
+default_md        = sha256
+default_days      = 3650                     # Durée de validité de 10 ans
+default_crl_days  = 30                       # Validité de la CRL : 30 jours
+policy            = policy_loose
+copy_extensions   = copy                     # Recopie les extensions de la requête vers le certificat
+
+[ policy_loose ]
+# Definit si les informations du demandeur doivent correspondre a l'AC
+countryName             = optional
+organizationName        = optional
+commonName              = optional           # Le nom (CN) doit obligatoirement etre fourni
+
+# --- Profil pour le Serveur Apache (Extensions X509 v3) ---
+[ server_tls ]
+basicConstraints       = critical, CA:FALSE  # CA:FALSE interdit a ce certificat de signer d'autres certificats
+keyUsage               = critical, digitalSignature, keyEncipherment 
+extendedKeyUsage       = serverAuth # serverAuth specifie que le certificat est pour un serveur Web
+subjectKeyIdentifier   = hash # Identifiant unique de la cle publique du serveur
+authorityKeyIdentifier = keyid, issuer # Lien vers l'identifiant de la cle de l'AC emettrice
+subjectAltName = DNS:www.mon-domaine.com, DNS:localhost, IP:127.0.0.1 #Le SAN est une extension X509v3 permettant de spécifier des identités additionnelles pour un certificat. Il remplace le champ CN qui est désormais obsolète pour la validation DNS dans les navigateurs modernes.
+
+# --- Profil pour l'Utilisateur (Authentification Client / S-MIME) ---
+[ user_tls ]
+basicConstraints       = critical, CA:FALSE # Entite de fin (ne peut pas etre une AC)
+keyUsage               = critical, digitalSignature, keyEncipherment 
+extendedKeyUsage       = clientAuth, emailProtection # clientAuth pour l'acces web, emailProtection pour le chiffrement de mail
+subjectKeyIdentifier   = hash 
+authorityKeyIdentifier = keyid, issuer
